@@ -2,14 +2,8 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running 'nixos-help').
 
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
-let
-  nix-vscode-extensions = import (builtins.fetchGit {
-    url = "https://github.com/nix-community/nix-vscode-extensions.git";
-    ref = "refs/heads/master";
-  });
-in
 {
   imports = [
       ./modules/modulebundle.nix
@@ -112,11 +106,6 @@ in
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  # Add nix-vscode-extensions overlay
-  nixpkgs.overlays = [
-    (nix-vscode-extensions.overlays.default)
-  ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
