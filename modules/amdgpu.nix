@@ -26,5 +26,5 @@
 	hardware.amdgpu.opencl.enable = true;
 
 	# Enable LACT (Linux AMDGPU Controller)
-	services.lact.enable = false;
+	services.lact.enable = true;
 }

@@ -94,6 +94,7 @@
       kdePackages.kate
       element-desktop
       librewolf
+      ungoogled-chromium
     #  thunderbird
     ];
   };

@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 let
   unstable = import <nixos-unstable> {
 		config.allowUnfree = true;
@@ -10,18 +10,9 @@ in
 
   environment.systemPackages = [
 		unstable.auto-cpufreq
+    pkgs.powertop
 	];
-  /*
-  # the module doesn't expose a "services.auto-cpufreq.package" option,
-  # therefore the overlay is required.
-  nixpkgs.overlays = [
-    (self: super: {
-      auto-cpufreq = unstable.auto-cpufreq;
-    })
-  ];
-  # UPDATE: unstable is still behind github version..
-  # might require more special tricks to get it
-  */
+
 
   services.logind.settings.Login = {
     HandleLidSwitch = "hibernate";
