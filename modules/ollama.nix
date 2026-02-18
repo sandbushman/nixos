@@ -17,6 +17,7 @@ in
  		#rocmOverrideGfx = "11.0.0";
 		loadModels = [
 			"lfm2.5-thinking:1.2b"
+			"rnj-1:8b"
 			"kimi-k2.5:cloud"
 			"glm-4.7:cloud"
 		];

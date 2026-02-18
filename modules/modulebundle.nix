@@ -9,6 +9,7 @@
       ./laptop.nix
       ./virtualization.nix
       ./qol.nix
+      ./onlineclass.nix
       #./llama-cpp.nix
   ];
 }
