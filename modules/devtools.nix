@@ -39,7 +39,7 @@ in
         ++ (lib.lists.optionals (lib.lists.elem stdenv.hostPlatform.system lib.platforms.linux) (
           with fixedExt.vscode-marketplace;
           [
-            (resetLicense ms-vscode.cpptools)
+            #(resetLicense ms-vscode.cpptools)
           ]
         ));
     })
