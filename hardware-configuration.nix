@@ -14,19 +14,19 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" =
-    { device = "/dev/disk/by-uuid/0271d5f0-bdf9-4e02-a2f1-ec87339b4a06";
+    { device = "/dev/disk/by-label/nixos-root";
       fsType = "btrfs";
       options = [ "subvol=@" ];
     };
 
   fileSystems."/home" =
-    { device = "/dev/disk/by-uuid/0271d5f0-bdf9-4e02-a2f1-ec87339b4a06";
+    { device = "/dev/disk/by-label/home";
       fsType = "btrfs";
       options = [ "subvol=@home" ];
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/F51D-4E2E";
+    { device = "/dev/disk/by-uuid/BF14-9A81";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };

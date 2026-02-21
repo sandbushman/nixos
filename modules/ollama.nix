@@ -19,7 +19,7 @@ in
 			"lfm2.5-thinking:1.2b"
 			"rnj-1:8b"
 			"kimi-k2.5:cloud"
-			"glm-4.7:cloud"
+			"glm-5:cloud"
 		];
 	};
 

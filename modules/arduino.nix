@@ -7,8 +7,10 @@
 		python313Packages.venvShellHook
 		#python315
 		arduino-ide
-		arduino-cli
 		arduino-language-server	# requires cli and clangd
+		arduino-cli # this is cli
+		llvmPackages_21.clang-tools	# this is clangd
+		cmake
 	];
 
 	/* solution 2: udev rules
