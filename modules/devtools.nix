@@ -1,54 +1,69 @@
 { pkgs, lib, ... }:
 let
-  nix-vscode-extensions-src = import (
-    builtins.fetchGit {
-      url = "https://github.com/nix-community/nix-vscode-extensions.git";
-      ref = "refs/heads/master";
-    }
-  );
-  resetLicense =
-    drv:
-    drv.overrideAttrs (prev: {
-      meta = prev.meta // {
-        license = [ ];
-      };
-    });
-
-  pkgs' = pkgs.extend nix-vscode-extensions-src.overlays.default;
-  fixedExt = pkgs'.nix-vscode-extensions.usingFixesFrom pkgs';
+  nix4vscode-src = builtins.fetchGit {
+    url = "https://github.com/nix-community/nix4vscode.git";
+    ref = "refs/heads/master";
+  };
+  forVscodeVersionRaw = import "${nix4vscode-src}/nix/forVscodeVersionRaw.nix";
+  vscodeVersion = pkgs.vscode.version or pkgs.vscodium.version;
+  vscodiumVersion = pkgs.vscodium.version;
+  mkVscodeFun = { version, pickPreRelease, isOpenVsx, decorators }:
+    extensions: forVscodeVersionRaw {
+      inherit pkgs extensions pickPreRelease isOpenVsx decorators;
+      dataPath = if isOpenVsx 
+        then "${nix4vscode-src}/data/extensions_openvsx.json"
+        else "${nix4vscode-src}/data/extensions.json";
+    };
+  nix4vscode = rec {
+    forVscode = mkVscodeFun { version = vscodeVersion; pickPreRelease = false; isOpenVsx = false; decorators = null; };
+    forVscodeVersion = version: mkVscodeFun { inherit version; pickPreRelease = false; isOpenVsx = false; decorators = null; };
+    forVscodePrerelease = mkVscodeFun { version = vscodeVersion; pickPreRelease = true; isOpenVsx = false; decorators = null; };
+    forVscodeVersionPrerelease = version: mkVscodeFun { inherit version; pickPreRelease = true; isOpenVsx = false; decorators = null; };
+    forVscodeExt = decorators: mkVscodeFun { version = vscodeVersion; pickPreRelease = false; isOpenVsx = false; inherit decorators; };
+    forVscodeExtVersion = decorators: version: mkVscodeFun { inherit version decorators; pickPreRelease = false; isOpenVsx = false; };
+    forVscodeExtPrerelease = decorators: mkVscodeFun { version = vscodeVersion; pickPreRelease = true; isOpenVsx = false; inherit decorators; };
+    forVscodeExtVersionPrerelease = decorators: version: mkVscodeFun { inherit version decorators; pickPreRelease = true; isOpenVsx = false; };
+    forOpenVsx = mkVscodeFun { version = vscodiumVersion; pickPreRelease = false; isOpenVsx = true; decorators = null; };
+    forOpenVsxVersion = version: mkVscodeFun { inherit version; pickPreRelease = false; isOpenVsx = true; decorators = null; };
+    forOpenVsxPrerelease = mkVscodeFun { version = vscodiumVersion; pickPreRelease = true; isOpenVsx = true; decorators = null; };
+    forOpenVsxVersionPrerelease = version: mkVscodeFun { inherit version; pickPreRelease = true; isOpenVsx = true; decorators = null; };
+    forOpenVsxExt = decorators: mkVscodeFun { version = vscodiumVersion; pickPreRelease = false; isOpenVsx = true; inherit decorators; };
+    forOpenVsxExtVersion = decorators: version: mkVscodeFun { inherit version decorators; pickPreRelease = false; isOpenVsx = true; };
+    forOpenVsxExtPrerelease = decorators: mkVscodeFun { version = vscodiumVersion; pickPreRelease = true; isOpenVsx = true; inherit decorators; };
+    forOpenVsxExtVersionPrerelease = decorators: version: mkVscodeFun { inherit version decorators; pickPreRelease = true; isOpenVsx = true; };
+  };
 in
 {
-  nixpkgs.overlays = [
-    nix-vscode-extensions-src.overlays.default
-  ];
-
   environment.systemPackages = with pkgs; [
-    tldr
-    (vscode-with-extensions.override {
-      vscode = vscodium;
-      vscodeExtensions =
-        (with vscode-extensions; [
-          christian-kohler.path-intellisense
-          jnoortheen.nix-ide
-          arrterian.nix-env-selector
-          ms-python.python
-          ms-python.debugpy
-          llvm-vs-code-extensions.vscode-clangd
-					platformio.platformio-vscode-ide
-        ])
-        ++ (lib.lists.optionals (lib.lists.elem stdenv.hostPlatform.system lib.platforms.linux) (
-          with fixedExt.vscode-marketplace;
-          [
-            #(resetLicense ms-vscode.cpptools)
-          ]
-        ));
+    (pkgs.vscode-with-extensions.override {
+      vscode = pkgs.vscodium;
+      vscodeExtensions = with pkgs.vscode-extensions; [
+        christian-kohler.path-intellisense
+        jnoortheen.nix-ide
+        arrterian.nix-env-selector
+        ms-python.python
+        ms-python.debugpy
+        platformio.platformio-vscode-ide
+      ] ++ nix4vscode.forVscode [
+        "ms-vscode.cpptools.1.23.6"
+      /*
+      ] ++ nix4vscode.forOpenVsx [
+        "rust-lang.rust-analyzer"
+      */
+      ];
     })
+    tealdeer
     nixd
     nixfmt
     git
     github-desktop
     opencode # vibecoding in vscode
-    platformio-core # arduino
+    platformio # arduino
     ncdu
+    libgcc
   ];
+
+  # installs an FHS-compatible linker that
+  # allows dynamically-linked Linux binaries to run.
+  programs.nix-ld.enable = true;
 }

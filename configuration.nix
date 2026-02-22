@@ -89,7 +89,7 @@
   users.users.quartzbrush = {
     isNormalUser = true;
     description = "Quartz Brush";
-    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" ];
+    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" "video" "libvirtd" ];
     packages = with pkgs; [
       kdePackages.kate
       element-desktop

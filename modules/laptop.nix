@@ -11,6 +11,7 @@ in
   environment.systemPackages = [
 		unstable.auto-cpufreq
     pkgs.powertop
+    pkgs.gparted
 	];
 
 
