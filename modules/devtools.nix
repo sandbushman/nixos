@@ -62,8 +62,4 @@ in
     ncdu
     libgcc
   ];
-
-  # installs an FHS-compatible linker that
-  # allows dynamically-linked Linux binaries to run.
-  programs.nix-ld.enable = true;
 }

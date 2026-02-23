@@ -13,6 +13,16 @@
 		cmake
 	];
 
+	# installs an FHS-compatible linker that
+  # allows dynamically-linked Linux binaries to run.
+  programs.nix-ld.enable = true;
+	# Without this, PlatformIO cannot use avr-gcc.
+
+	# Allow avrdude to see /bin/bash via tmpfiles symlink.
+	systemd.tmpfiles.rules = [
+  	"L+ /bin/bash - - - - ${pkgs.bash}/bin/bash"
+	];
+
 	/* solution 2: udev rules
 	services.udev.extraRules = ''
   SUBSYSTEM=="tty", ATTRS{idVendor}=="*", ATTRS{idProduct}=="*", MODE="0666", GROUP="dialout"
