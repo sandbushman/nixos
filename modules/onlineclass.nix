@@ -1,8 +1,9 @@
 { pkgs, ... }:
 
 {
-  environment.systemPackages = [
-    pkgs.zoom-us
+  environment.systemPackages = with pkgs; [
+    zoom-us
+    libreoffice
     # teams
     ];
 

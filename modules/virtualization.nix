@@ -19,7 +19,8 @@
   environment.systemPackages = with pkgs; [
     qemu
     dnsmasq
-    OVMF
+    # diagnosis tools
+    nvme-cli
   ];
 
   # Define and autostart the default network

@@ -61,5 +61,8 @@ in
     platformio # arduino
     ncdu
     libgcc
+    vim
+    cdrkit # convert dir -> iso
+    prettier # format ur ugly code
   ];
 }

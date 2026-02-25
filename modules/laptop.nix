@@ -8,12 +8,11 @@ in
   # firmware updates
   services.fwupd.enable = true;
 
-  environment.systemPackages = [
+  environment.systemPackages = with pkgs; [
 		unstable.auto-cpufreq
-    pkgs.powertop
-    pkgs.gparted
+    powertop
+    kdePackages.partitionmanager
 	];
-
 
   services.logind.settings.Login = {
     HandleLidSwitch = "hibernate";
