@@ -86,9 +86,9 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.quartzbrush = {
+  users.users.linuxdev = {
     isNormalUser = true;
-    description = "Quartz Brush";
+    description = "linuxdev";
     extraGroups = [ "networkmanager" "wheel" "tty" "dialout" "video" "libvirtd" ];
     packages = with pkgs; [
       kdePackages.kate

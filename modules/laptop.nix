@@ -38,4 +38,7 @@ in
       };
     };
   };
+
+  # Creates a zram block device and uses it as a swap device.
+  zramSwap.enable = true;
 }

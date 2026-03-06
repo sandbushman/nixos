@@ -18,6 +18,7 @@ in
 		loadModels = [
 			"lfm2.5-thinking:1.2b"
 			"rnj-1:8b"
+			"qwen3.5:9b"
 			"kimi-k2.5:cloud"
 			"glm-5:cloud"
 		];

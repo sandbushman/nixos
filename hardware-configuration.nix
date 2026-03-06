@@ -25,7 +25,7 @@
     };
 
   fileSystems."/boot" =
-    { device = "/dev/disk/by-uuid/BF14-9A81";
+    { device = "/dev/disk/by-label/nixos-esp";
       fsType = "vfat";
       options = [ "fmask=0077" "dmask=0077" ];
     };
