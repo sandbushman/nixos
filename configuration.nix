@@ -112,6 +112,7 @@
     wget
     clamav # linux antivirus
     clamtk # clamav gui
+    fastfetch
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

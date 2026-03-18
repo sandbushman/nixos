@@ -1,19 +1,25 @@
 { pkgs, ... }:
-let
-  unstable = import <nixos-unstable> {
-		config.allowUnfree = true;
-	};
-in
+
 {
+  imports = [
+    <nixos-hardware/common/cpu/amd>
+    <nixos-hardware/common/cpu/amd/pstate.nix>
+    <nixos-hardware/common/pc/laptop>
+    <nixos-hardware/common/pc/ssd>
+    <nixos-hardware/asus/battery.nix>
+  ];
+
+  # Battery charge limit (80% extends battery lifespan)
+  hardware.asus.battery.chargeUpto = 80;
+
   # firmware updates
   services.fwupd.enable = true;
 
   environment.systemPackages = with pkgs; [
-		unstable.auto-cpufreq
     powertop
     kdePackages.partitionmanager
-	];
-
+  ];
+  
   services.logind.settings.Login = {
     HandleLidSwitch = "hibernate";
     HandleLidSwitchExternalPower = "lock";
@@ -21,24 +27,6 @@ in
   };
   # one of "ignore", "poweroff", "reboot", "halt", "kexec", "suspend",
   # "hibernate", "hybrid-sleep", "suspend-then-hibernate", "lock"
-  
-  # Disable this, else it conflicts with auto-cpufreq.
-  services.power-profiles-daemon.enable = false;
-  # auto-cpufreq, a better power management service.
-  services.auto-cpufreq = {
-    enable = true;
-    settings = {
-      battery = {
-        governor = "powersave";
-        turbo = "never";
-      };
-      charger = {
-        governor = "powersave";
-        turbo = "never";
-      };
-    };
-  };
 
-  # Creates a zram block device and uses it as a swap device.
   zramSwap.enable = true;
 }
