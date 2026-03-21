@@ -6,10 +6,10 @@
 
 {
   imports = [
-      ./modules/modulebundle.nix
-      # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-    ];
+    ./modules/modulebundle.nix
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot = {
@@ -86,16 +86,25 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
+  programs.fish.enable = true;
+
   users.users.linuxdev = {
     isNormalUser = true;
     description = "linuxdev";
-    extraGroups = [ "networkmanager" "wheel" "tty" "dialout" "video" "libvirtd" ];
+    shell = pkgs.fish;
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "tty"
+      "dialout"
+      "video"
+      "libvirtd"
+    ];
     packages = with pkgs; [
       kdePackages.kate
       element-desktop
       librewolf
       ungoogled-chromium
-    #  thunderbird
     ];
   };
 
@@ -141,4 +150,7 @@
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.11"; # Did you read the comment?
+
+  # Enable flakes.
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 }
