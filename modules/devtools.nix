@@ -64,5 +64,6 @@ in
     vim
     cdrkit # convert dir -> iso
     prettier # format ur ugly code
+    yq-go
   ];
 }
