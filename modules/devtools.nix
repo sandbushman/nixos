@@ -1,9 +1,8 @@
 { pkgs, lib, ... }:
 let
-  nix4vscode-src = builtins.fetchGit {
-    url = "https://github.com/nix-community/nix4vscode.git";
-    ref = "refs/heads/master";
-  };
+  nix4vscode-src = builtins.fetchTarball {
+     url = "https://github.com/nix-community/nix4vscode/archive/266f0a0d6946a117b10b3fff94032029a91e3ef7.tar.gz";
+   };
   forVscodeVersionRaw = import "${nix4vscode-src}/nix/forVscodeVersionRaw.nix";
   vscodeVersion = pkgs.vscode.version or pkgs.vscodium.version;
   vscodiumVersion = pkgs.vscodium.version;
