@@ -1,4 +1,4 @@
-{ ... }:
+_:
 let
   unstable = import <nixos-unstable> {
     config.allowUnfree = true;

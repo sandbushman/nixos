@@ -12,11 +12,13 @@
   ];
 
   # Bootloader.
-  boot.loader.systemd-boot = {
-    enable = true;
-    configurationLimit = 9;
+  boot.loader = {
+    systemd-boot = {
+      enable = true;
+      configurationLimit = 9;
+    };
+    efi.canTouchEfiVariables = true;
   };
-  boot.loader.efi.canTouchEfiVariables = true;
 
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -49,18 +51,21 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
+  services = {
+    # Enable the X11 windowing system.
+    # You can disable this if you're only using the Wayland session.
+    xserver = {
+      enable = true;
+      # Configure keymap in X11
+      xkb = {
+        layout = "us";
+        variant = "";
+      };
+    };
 
-  # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
+    # Enable the KDE Plasma Desktop Environment.
+    displayManager.sddm.enable = true;
+    desktopManager.plasma6.enable = true;
   };
 
   # Enable CUPS to print documents.
