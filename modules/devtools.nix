@@ -1,152 +1,5 @@
-{ pkgs, lib, ... }:
-let
-  nix4vscode-src = builtins.fetchTarball {
-     url = "https://github.com/nix-community/nix4vscode/archive/266f0a0d6946a117b10b3fff94032029a91e3ef7.tar.gz";
-   };
-  forVscodeVersionRaw = import "${nix4vscode-src}/nix/forVscodeVersionRaw.nix";
-  vscodeVersion = pkgs.vscode.version or pkgs.vscodium.version;
-  vscodiumVersion = pkgs.vscodium.version;
-  mkVscodeFun =
-    {
-      version,
-      pickPreRelease,
-      isOpenVsx,
-      decorators,
-    }:
-    extensions:
-    forVscodeVersionRaw {
-      inherit
-        pkgs
-        extensions
-        pickPreRelease
-        isOpenVsx
-        decorators
-        ;
-      dataPath =
-        if isOpenVsx then
-          "${nix4vscode-src}/data/extensions_openvsx.json"
-        else
-          "${nix4vscode-src}/data/extensions.json";
-    };
-  nix4vscode = rec {
-    forVscode = mkVscodeFun {
-      version = vscodeVersion;
-      pickPreRelease = false;
-      isOpenVsx = false;
-      decorators = null;
-    };
-    forVscodeVersion =
-      version:
-      mkVscodeFun {
-        inherit version;
-        pickPreRelease = false;
-        isOpenVsx = false;
-        decorators = null;
-      };
-    forVscodePrerelease = mkVscodeFun {
-      version = vscodeVersion;
-      pickPreRelease = true;
-      isOpenVsx = false;
-      decorators = null;
-    };
-    forVscodeVersionPrerelease =
-      version:
-      mkVscodeFun {
-        inherit version;
-        pickPreRelease = true;
-        isOpenVsx = false;
-        decorators = null;
-      };
-    forVscodeExt =
-      decorators:
-      mkVscodeFun {
-        version = vscodeVersion;
-        pickPreRelease = false;
-        isOpenVsx = false;
-        inherit decorators;
-      };
-    forVscodeExtVersion =
-      decorators: version:
-      mkVscodeFun {
-        inherit version decorators;
-        pickPreRelease = false;
-        isOpenVsx = false;
-      };
-    forVscodeExtPrerelease =
-      decorators:
-      mkVscodeFun {
-        version = vscodeVersion;
-        pickPreRelease = true;
-        isOpenVsx = false;
-        inherit decorators;
-      };
-    forVscodeExtVersionPrerelease =
-      decorators: version:
-      mkVscodeFun {
-        inherit version decorators;
-        pickPreRelease = true;
-        isOpenVsx = false;
-      };
-    forOpenVsx = mkVscodeFun {
-      version = vscodiumVersion;
-      pickPreRelease = false;
-      isOpenVsx = true;
-      decorators = null;
-    };
-    forOpenVsxVersion =
-      version:
-      mkVscodeFun {
-        inherit version;
-        pickPreRelease = false;
-        isOpenVsx = true;
-        decorators = null;
-      };
-    forOpenVsxPrerelease = mkVscodeFun {
-      version = vscodiumVersion;
-      pickPreRelease = true;
-      isOpenVsx = true;
-      decorators = null;
-    };
-    forOpenVsxVersionPrerelease =
-      version:
-      mkVscodeFun {
-        inherit version;
-        pickPreRelease = true;
-        isOpenVsx = true;
-        decorators = null;
-      };
-    forOpenVsxExt =
-      decorators:
-      mkVscodeFun {
-        version = vscodiumVersion;
-        pickPreRelease = false;
-        isOpenVsx = true;
-        inherit decorators;
-      };
-    forOpenVsxExtVersion =
-      decorators: version:
-      mkVscodeFun {
-        inherit version decorators;
-        pickPreRelease = false;
-        isOpenVsx = true;
-      };
-    forOpenVsxExtPrerelease =
-      decorators:
-      mkVscodeFun {
-        version = vscodiumVersion;
-        pickPreRelease = true;
-        isOpenVsx = true;
-        inherit decorators;
-      };
-    forOpenVsxExtVersionPrerelease =
-      decorators: version:
-      mkVscodeFun {
-        inherit version decorators;
-        pickPreRelease = true;
-        isOpenVsx = true;
-      };
-  };
-in
+{ pkgs, ... }:
+
 {
   environment.systemPackages = with pkgs; [
     (pkgs.vscode-with-extensions.override {
@@ -161,12 +14,8 @@ in
           ms-python.debugpy
           platformio.platformio-vscode-ide
         ]
-        ++ nix4vscode.forVscode [
+        ++ pkgs.nix4vscode.forVscode [
           "ms-vscode.cpptools.1.23.6"
-          /*
-            ] ++ nix4vscode.forOpenVsx [
-              "rust-lang.rust-analyzer"
-          */
         ];
     })
     tealdeer
@@ -179,13 +28,13 @@ in
     comma
     git
     github-desktop
-    opencode # vibecoding in vscode
-    platformio # arduino
+    opencode
+    platformio
     ncdu
     libgcc
     vim
-    cdrkit # convert dir -> iso
-    prettier # format ur ugly code
+    cdrkit
+    prettier
     yq-go
   ];
 }

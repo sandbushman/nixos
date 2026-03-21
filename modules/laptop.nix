@@ -1,18 +1,16 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   imports = [
-    <nixos-hardware/common/cpu/amd>
-    <nixos-hardware/common/cpu/amd/pstate.nix>
-    <nixos-hardware/common/pc/laptop>
-    <nixos-hardware/common/pc/ssd>
-    <nixos-hardware/asus/battery.nix>
+    inputs.nixos-hardware.nixosModules.common-cpu-amd
+    inputs.nixos-hardware.nixosModules.common-cpu-amd-pstate
+    inputs.nixos-hardware.nixosModules.common-pc-laptop
+    inputs.nixos-hardware.nixosModules.common-pc-ssd
+    inputs.nixos-hardware.nixosModules.asus-battery
   ];
 
-  # Battery charge limit (80% extends battery lifespan)
   hardware.asus.battery.chargeUpto = 80;
 
-  # firmware updates
   services.fwupd.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -25,8 +23,6 @@
     HandleLidSwitchExternalPower = "lock";
     HandleLidSwitchDocked = "ignore";
   };
-  # one of "ignore", "poweroff", "reboot", "halt", "kexec", "suspend",
-  # "hibernate", "hybrid-sleep", "suspend-then-hibernate", "lock"
 
   zramSwap.enable = true;
 }

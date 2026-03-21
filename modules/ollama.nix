@@ -1,28 +1,25 @@
-_:
+{ pkgs, inputs, ... }:
+
 let
-  	unstable = import <nixos-unstable> {
-		config.allowUnfree = true;
-	};
+  pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
 {
-	environment.systemPackages = [
-		unstable.ollama-vulkan
-	];
+  environment.systemPackages = [
+    pkgs-unstable.ollama-vulkan
+  ];
 
-	services.ollama = {
-  	enable = true;	# if false, will not use the declared settings
-		package = unstable.ollama-vulkan;	# set service's version to unstable
- 		acceleration = "vulkan";
- 		# results in environment variable "HSA_OVERRIDE_GFX_VERSION=11.0.0"
- 		#rocmOverrideGfx = "11.0.0";
-		loadModels = [
-			"lfm2.5-thinking:1.2b"
-			"rnj-1:8b"
-			"qwen3.5:9b"
-			"kimi-k2.5:cloud"
-			"glm-5:cloud"
-		];
-	};
+  services.ollama = {
+    enable = true;
+    package = pkgs-unstable.ollama-vulkan;
+    acceleration = "vulkan";
+    loadModels = [
+      "lfm2.5-thinking:1.2b"
+      "rnj-1:8b"
+      "qwen3.5:9b"
+      "kimi-k2.5:cloud"
+      "glm-5:cloud"
+    ];
+  };
 
-	boot.initrd.kernelModules = [ "amdgpu" ];
+  boot.initrd.kernelModules = [ "amdgpu" ];
 }
