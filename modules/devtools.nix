@@ -30,7 +30,9 @@
     github-desktop
     opencode
     platformio
-    ncdu
+    btdu  # btrfs disk usage analyzer. pita to use
+    dust  # rust-based disk usage analyzer, but faster and harder to use
+    ncdu  # ncurses disk usage analyzer, good ol reliable
     libgcc
     vim
     cdrkit
